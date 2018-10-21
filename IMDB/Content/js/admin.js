@@ -65,7 +65,7 @@ function saveActor() {
                 $('#id_tbl_displayActorDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -125,7 +125,7 @@ function saveProducer() {
                 $('#id_tbl_displayProducerDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -145,12 +145,17 @@ function saveMovie() {
         ActorIds += multiple[i] + ",";
     }
 
+    if (ActorIds == "") {
+        alert("Please Select atleast 1 Actor");
+        return false;
+    }
+
     var formData = new FormData();
     formData.append("UID", $('#id_hid_movieID').val().trim());
     formData.append("Name", $('#id_txt_movieName').val().trim());
     formData.append("YearOfRelease", $('#id_ddl_movieyearOfRelease option:selected').val().trim());
-    formData.append("Producer", $('#id_ddl_movieProducer option:selected').val().trim());
-    formData.append("Actors", ActorIds.substring(0, ActorIds.length - 1).trim());
+    formData.append("Producer", $('#id_ddl_movieProducer option:selected').val());
+    formData.append("Actors", ActorIds.substring(0, ActorIds.length - 1));
     formData.append("Plot", $('#id_txt_moviePlot').val().trim());
     formData.append("PosterFile", $("#id_file_moviePoster")[0].files[0]);
     formData.append("Mode", mode);
@@ -171,10 +176,9 @@ function saveMovie() {
                 // clear fields
                 $('#id_hid_movieID').val("");
                 $('#id_txt_movieName').val("");
-                $('#id_txt_movieyearOfRelease').val("");
-                $('#id_ddl_movieProducer option:selected').val("");
-                $("#id_ddl_movieActors").val('default');
-                $("#id_ddl_movieActors").selectpicker("refresh");
+                $('#id_txt_movieyearOfRelease option:selected').val("");
+                bindDdlProducers();
+                bindDdlActors();
 
                 $('#id_txt_moviePlot').val("");
                 $('#id_file_moviePoster').val("");
@@ -183,7 +187,7 @@ function saveMovie() {
                 $('#id_tbl_displayMovieDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -214,7 +218,7 @@ function searchActor() {
                     t += '<td>' + res[i].Sex + '</td>';
                     t += '<td>' + res[i].DOB + '</td>';
                     t += '<td>' + res[i].Bio + '</td>';
-                    t += '<td>' + '<button class="btn btn-success btn-sm" onclick="editActorDetail(this.id)" id=actor_' + res[i].UID + '> EDIT </button></td>';
+                    t += '<td>' + '<button type="button" class="btn btn-success btn-sm" onclick="editActorDetail(this.id)" id=actor_' + res[i].UID + '> EDIT </button></td>';
                     t += '</tr>';
                     $('#id_tbl_displayActorDetails').append(t);
                 }
@@ -250,7 +254,7 @@ function searchProducer() {
                     t += '<td>' + res[i].Sex + '</td>';
                     t += '<td>' + res[i].DOB + '</td>';
                     t += '<td>' + res[i].Bio + '</td>';
-                    t += '<td>' + '<button  class="btn btn-success btn-sm" onclick="editProducerDetail(this.id)" id=pro_' + res[i].UID + '> EDIT </button></td>';
+                    t += '<td>' + '<button type="button" class="btn btn-success btn-sm" onclick="editProducerDetail(this.id)" id=pro_' + res[i].UID + '> EDIT </button></td>';
                     t += '</tr>';
                     $('#id_tbl_displayProducerDetails').append(t);
                 }
@@ -312,7 +316,7 @@ function searchMovie() {
                     t += '<td>' + res[i].Producer + '</td>';
                     t += '<td>' + res[i].Actors + '</td>';
                     t += '<td>' + res[i].Plot + '</td>';
-                    t += '<td>' + '<button class="btn btn-success btn-sm" onclick="editMovieDetail(this.id)" id=movie_' + res[i].UID + '> EDIT </button></td>';
+                    t += '<td>' + '<button type="button" class="btn btn-success btn-sm" onclick="editMovieDetail(this.id)" id=movie_' + res[i].UID + '> EDIT </button></td>';
                     t += '</tr>';
                     $('#id_tbl_displayMovieDetails').append(t);
                 }
@@ -339,9 +343,9 @@ function editActorDetail(actorId) {
             break;
         }
     }
-
+    var actorDOB = globalJson[indexInGlobalJson]["DOB"];
     $('#id_txt_actorName').val(globalJson[indexInGlobalJson]["Name"]);
-    $('#id_txt_actorDOB').val(globalJson[indexInGlobalJson]["DOB"].substring(0, 10));
+    $('#id_txt_actorDOB').val(actorDOB.substring(0, actorDOB.length - 12));
     $('#id_txt_actorBio').val(globalJson[indexInGlobalJson]["Bio"]);
     // select gender radio button
     var radios = document.getElementsByName("actorgender");
@@ -364,9 +368,9 @@ function editProducerDetail(proId) {
             break;
         }
     }
-
+    var proDOB = globalJson[indexInGlobalJson]["DOB"];
     $('#id_txt_proName').val(globalJson[indexInGlobalJson]["Name"]);
-    $('#id_txt_proDOB').val(globalJson[indexInGlobalJson]["DOB"].substring(0, 10));
+    $('#id_txt_proDOB').val(proDOB.substring(0, proDOB.length - 12));
     $('#id_txt_proBio').val(globalJson[indexInGlobalJson]["Bio"]);
     // select gender radio button
     var radios = document.getElementsByName("progender");
@@ -391,17 +395,16 @@ function editMovieDetail(movieId) {
     }
 
     $('#id_txt_movieName').val(globalJson[indexInGlobalJson]["Name"]);
-    $('#id_txt_movieyearOfRelease option:selected').val(globalJson[indexInGlobalJson]["YearOfRelease"]);
-    $('#id_ddl_movieProducer option:contains(' + globalJson[indexInGlobalJson]["Producer"] + ')').attr('selected', 'selected');
+    $('#id_ddl_movieyearOfRelease option:contains(' + globalJson[indexInGlobalJson]["YearOfRelease"] + ')').attr('selected', 'selected');
+    //$('#id_ddl_movieProducer option:contains(' + globalJson[indexInGlobalJson]["Producer"] + ')').attr('selected', 'selected');
     $('#id_txt_moviePlot').val(globalJson[indexInGlobalJson]["Plot"]);
 
-    var actorName = globalJson[indexInGlobalJson]["Actors"].split(', ');
+    //var actorName = globalJson[indexInGlobalJson]["Actors"].split(', ');
 
-    for (var i = 0; i < actorName.length; i++) {
-        console.log(actorName[i]);
-        $('#id_ddl_movieActors option:contains(' + actorName[i] + ')').attr('selected', 'selected');
-    }
-    $('#id_ddl_movieActors').selectpicker('refresh');
+    //for (var i = 0; i < actorName.length; i++) {
+    //    $('#id_ddl_movieActors option:contains(' + actorName[i] + ')').attr('selected', 'selected');
+    //}
+    //$('#id_ddl_movieActors').selectpicker('refresh');
 }
 
 // fill ddls from database 

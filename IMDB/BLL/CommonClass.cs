@@ -36,7 +36,7 @@ namespace IMDB.BLL
                 cmd.Parameters["@pMsg"].Direction = ParameterDirection.Output;
                 result = cmd.ExecuteNonQuery().ToString();
                 string returnedfromDB = cmd.Parameters["@pMsg"].Value.ToString();
-                if (returnedfromDB != "")
+                if (result != "1")
                 {
                     result = returnedfromDB;
                 }
@@ -71,7 +71,7 @@ namespace IMDB.BLL
                 cmd.Parameters["@pMsg"].Direction = ParameterDirection.Output;
                 result = cmd.ExecuteNonQuery().ToString();
                 string returnedfromDB = cmd.Parameters["@pMsg"].Value.ToString();
-                if (returnedfromDB != "")
+                if (result != "1")
                 {
                     result = returnedfromDB;
                 }
@@ -99,6 +99,11 @@ namespace IMDB.BLL
                 cmd.Parameters.AddWithValue("@pUID", _model.UID);
                 cmd.Parameters.AddWithValue("@pName", _model.Name);
                 cmd.Parameters.AddWithValue("@pYearOfRelease", _model.YearOfRelease);
+                if (_model.Producer == null)
+                {
+                    return "Select Producer Again";
+                }
+
                 cmd.Parameters.AddWithValue("@pProduderId", _model.Producer);
                 cmd.Parameters.AddWithValue("@pActorsId", _model.Actors);
                 cmd.Parameters.AddWithValue("@pPlot", _model.Plot);
@@ -109,7 +114,7 @@ namespace IMDB.BLL
                 cmd.Parameters["@pMsg"].Direction = ParameterDirection.Output;
                 result = cmd.ExecuteNonQuery().ToString();
                 string returnedfromDB = cmd.Parameters["@pMsg"].Value.ToString();
-                if (returnedfromDB != "")
+                if (result != "1")
                 {
                     result = returnedfromDB;
                 }

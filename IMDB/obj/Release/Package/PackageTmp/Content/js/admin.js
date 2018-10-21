@@ -65,7 +65,7 @@ function saveActor() {
                 $('#id_tbl_displayActorDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -125,7 +125,7 @@ function saveProducer() {
                 $('#id_tbl_displayProducerDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -171,7 +171,7 @@ function saveMovie() {
                 // clear fields
                 $('#id_hid_movieID').val("");
                 $('#id_txt_movieName').val("");
-                $('#id_txt_movieyearOfRelease').val("");
+                $('#id_txt_movieyearOfRelease option:selected').val("");
                 $('#id_ddl_movieProducer option:selected').val("");
                 $("#id_ddl_movieActors").val('default');
                 $("#id_ddl_movieActors").selectpicker("refresh");
@@ -183,7 +183,7 @@ function saveMovie() {
                 $('#id_tbl_displayMovieDetails').empty();
             }
             else
-                swal(result, "Try Again!", "error");
+                swal("Something went wrong!", "Try Again!", "error");
         },
         error: function (result) {
             swal(result, "Try Again!", "error");
@@ -391,14 +391,13 @@ function editMovieDetail(movieId) {
     }
 
     $('#id_txt_movieName').val(globalJson[indexInGlobalJson]["Name"]);
-    $('#id_txt_movieyearOfRelease option:selected').val(globalJson[indexInGlobalJson]["YearOfRelease"]);
+    $('#id_ddl_movieyearOfRelease option:contains(' + globalJson[indexInGlobalJson]["YearOfRelease"] + ')').attr('selected', 'selected');
     $('#id_ddl_movieProducer option:contains(' + globalJson[indexInGlobalJson]["Producer"] + ')').attr('selected', 'selected');
     $('#id_txt_moviePlot').val(globalJson[indexInGlobalJson]["Plot"]);
 
     var actorName = globalJson[indexInGlobalJson]["Actors"].split(', ');
 
     for (var i = 0; i < actorName.length; i++) {
-        console.log(actorName[i]);
         $('#id_ddl_movieActors option:contains(' + actorName[i] + ')').attr('selected', 'selected');
     }
     $('#id_ddl_movieActors').selectpicker('refresh');

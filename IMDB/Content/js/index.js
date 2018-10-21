@@ -50,11 +50,9 @@ function getMovie() {
                 t += '</span></p></div></div></div>';
             }
             $('#id_div_displayMovies').append(t + '</div>');
-            console.log(t);
         }
         else {
-            swal("error", "Oops ! There is No Record for this Search", "error");
-            $('#id_tbl_displayMovieDetails').empty();
+            $('#id_div_displayMovies').append("<h2> No Movie Found, Add Movies to see them here !");
         }
     });
 }

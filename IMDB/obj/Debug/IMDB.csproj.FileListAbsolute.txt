@@ -82,3 +82,4 @@ D:\idetails\deltaX\IMDB\IMDB\obj\Debug\IMDB.csproj.CoreCompileInputs.cache
 D:\idetails\deltaX\IMDB\IMDB\obj\Debug\IMDB.csproj.CopyComplete
 D:\idetails\deltaX\IMDB\IMDB\obj\Debug\IMDB.dll
 D:\idetails\deltaX\IMDB\IMDB\obj\Debug\IMDB.pdb
+D:\idetails\deltaX\IMDB\IMDB\obj\Debug\IMDB.csprojAssemblyReference.cache
